@@ -106,4 +106,20 @@ class LeadService {
         return summary;
     }
 
+    Map updateLead(Lead lead){
+    if(lead.validate()){
+        Lead savedLead = lead.save(flush: true);
+        if (!savedLead){
+            return [status: "not saved",lead:null,message: "something went wrong with saving in db"];
+        }
+        else{
+            return [status: "SAVED",lead:lead,message: "Updated the db "];
+        }
+    }
+        else{
+        return [status: "INVALID",lead:null,message: "PLEASE PROVIDE CORRECT PARAMS"];
+    }
+
+    }
+
 }

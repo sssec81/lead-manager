@@ -5,7 +5,7 @@ import grails.converters.JSON;
 class LeadController {
     LeadService leadService;
 
-    static allowedMethods = [index:"GET",some_test:"GET",clean_lead:"GET",csv_import:"POST"]
+    static allowedMethods = [index:"GET",some_test:"GET",clean_lead:"GET",csv_import:"POST",update_lead:"POST"]
 
     def index() {
         def responseData =[
@@ -63,6 +63,24 @@ class LeadController {
         Map summary = leadService.importCsv(csv);
 
         render([status:"SUCCESS",summary:summary,message: "CSV successfully parsed"] as JSON);
+    }
+
+    def update_lead(){
+        def body = request.JSON
+        String id = params.id;
+        Lead lead   = Lead.get(id);
+        if(!lead){
+            response.status = 400;
+            render([status:"INVALID",message:"params not enough"] as JSON);
+            return
+        }
+        lead.properties = body;
+        // DEBUG: Is Grails seeing the changes?
+        log.info "Is lead dirty? ${lead.isDirty()}"
+        log.info "Dirty properties: ${lead.dirtyPropertyNames}"
+
+        Map result = leadService.updateLead(lead);
+        render(result as JSON);
     }
 
 }

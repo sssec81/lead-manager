@@ -15,4 +15,21 @@ class Lead {
         email blank:false,email:true,unique:true
         status inList: ["NEW","CONTACTED","QUALIFIED","REJECT"]
     }
+
+    def beforeUpdate(){
+        if (this.isDirty()){
+            this.dirtyPropertyNames.each{ field ->
+                if (field !="Version" && field != "lastUpdated"){
+                    AuditLog log = new AuditLog(
+                            action:"UPDATE",
+                            fieldName: field,
+                            oldValue: this.getPersistentValue(field)?.toString(),
+                            newValue: this[field]?.toString(),
+                            leadId: this.id
+                    )
+                    log.save(failOnError: true);
+                }
+            }
+        }
+    }
 }
