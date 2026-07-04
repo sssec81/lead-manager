@@ -10,7 +10,7 @@ class AuditLog {
 
 
     static constraints = {
-        fieldName nullabe:true
+        fieldName nullable:true
         oldValue nullable:true
         newValue nullable:true
 

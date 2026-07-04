@@ -42,7 +42,6 @@ class LeadController {
             ];
         }
         else{
-            response.status = 400
             apiResponse = [status:result.status, message: result.message]
         }
 
@@ -74,11 +73,10 @@ class LeadController {
             render([status:"INVALID",message:"params not enough"] as JSON);
             return
         }
-        lead.properties = body;
         // DEBUG: Is Grails seeing the changes?
+        bindData(lead,body,include:["firstName","lastName","email","status"])
         log.info "Is lead dirty? ${lead.isDirty()}"
         log.info "Dirty properties: ${lead.dirtyPropertyNames}"
-
         Map result = leadService.updateLead(lead);
         render(result as JSON);
     }
