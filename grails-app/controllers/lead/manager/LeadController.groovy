@@ -30,6 +30,7 @@ class LeadController {
         def apiResponse
         def leadObject = result.lead
         if (result.status=="SAVED" || result.status=="DUPLICATE"){
+            response.status =200
             apiResponse = [status:result.status, message: result.message,
                            lead  :[
                                 id:leadObject?.id,
@@ -42,6 +43,7 @@ class LeadController {
             ];
         }
         else{
+            response.status = 400
             apiResponse = [status:result.status, message: result.message]
         }
 
